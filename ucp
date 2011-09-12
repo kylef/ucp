@@ -34,6 +34,12 @@ ftp_provider() {
   curl -T $1 -u $FTP_USER:$FTP_PASSWORD ftp://$FTP_HOST/$FTP_DIR$2
 }
 
+BACON_URL=permalink
+
+bacon_provider() {
+  URL=$(curl -u $BACON_USER:$BACON_PASSWORD -F "file=@$1;filename=$2;type=$(file -b --mime $1)" "http://baconfile.com/$BACON_USER.json" | jsawk "return this.$BACON_URL")
+}
+
 isgd_provider() {
   URL=$(curl "http://is.gd/api.php?longurl=$1")
 }
@@ -74,7 +80,9 @@ file_to_url() {
     ${UPLOAD_PROVIDER}_provider $1 $2
   fi
 
-  URL=$BASEURL$2
+  if [ -z $URL ] ; then
+    URL=$BASEURL$2
+  fi
 
   if [ ! -z $URL_PROVIDER ] ; then
     ${URL_PROVIDER}_provider "$URL"
