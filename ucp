@@ -31,7 +31,7 @@ sftp_provider() {
 }
 
 ftp_provider() {
-  curl -T $1 -u $FTP_USER:$FTP_PASSWORD ftp://$FTP_HOST/$2
+  curl -T $1 -u $FTP_USER:$FTP_PASSWORD ftp://$FTP_HOST/$FTP_DIR$2
 }
 
 pbcopy_provider() {
