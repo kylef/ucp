@@ -22,12 +22,12 @@ scrot_select_provider() {
 
 # Set some sane defaults for SFTP
 SFTP_USER=$(whoami)
-SFTP_DOMAIN=localhost
+SFTP_HOST=localhost
 SFTP_PORT=22
 SFTP_DIR=
 
 sftp_provider() {
-  scp -P $SFTP_PORT $1 $SFTP_USER@$SFTP_DOMAIN:$SFTP_DIR$2
+  scp -P $SFTP_PORT $1 $SFTP_USER@$SFTP_HOST:$SFTP_DIR$2
 }
 
 ftp_provider() {
