@@ -38,6 +38,10 @@ xsel_provider() {
   `echo "$1" | xsel --clipboard --input`
 }
 
+growl_provider() {
+  `growlnotify -m "$1 has been uploaded" -t "ucp"`
+}
+
 file_to_url() {
   # $1 - File
   # $2 - New file name
@@ -52,6 +56,10 @@ file_to_url() {
     ${CLIPBOARD_PROVDER}_provider "$URL"
   else
     echo "$URL"
+  fi
+
+  if [ ! -z $NOTIFICATION_PROVDER ] ; then
+    ${NOTIFICATION_PROVDER}_provider "$URL"
   fi
 }
 
