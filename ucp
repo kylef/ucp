@@ -34,6 +34,10 @@ pbcopy_provider() {
   `echo "$1" | pbcopy`
 }
 
+xsel_provider() {
+  `echo "$1" | xsel --clipboard --input`
+}
+
 file_to_url() {
   # $1 - File
   # $2 - New file name
