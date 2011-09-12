@@ -42,6 +42,14 @@ bitly_provider() {
   URL=$(curl "http://api.bit.ly/v3/shorten?login=$BITLY_USER&apiKey=$BITLY_API&format=txt&longUrl=$1")
 }
 
+vgd_provider() {
+  URL=$(curl "http://v.gd/create.php?format=simple&url=$1")
+}
+
+tinyurl_provider() {
+  URL=$(curl "http://tinyurl.com/api-create.php?url=$1")
+}
+
 pbcopy_provider() {
   `echo "$1" | pbcopy`
 }
