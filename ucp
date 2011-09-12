@@ -34,6 +34,10 @@ ftp_provider() {
   curl -T $1 -u $FTP_USER:$FTP_PASSWORD ftp://$FTP_HOST/$FTP_DIR$2
 }
 
+isgd_provider() {
+  URL=$(curl "http://is.gd/api.php?longurl=$1")
+}
+
 pbcopy_provider() {
   `echo "$1" | pbcopy`
 }
@@ -55,6 +59,10 @@ file_to_url() {
   fi
 
   URL=$BASEURL$2
+
+  if [ ! -z $URL_PROVIDER ] ; then
+    ${URL_PROVIDER}_provider "$URL"
+  fi
 
   if [ ! -z $CLIPBOARD_PROVDER ] ; then
     ${CLIPBOARD_PROVDER}_provider "$URL"
