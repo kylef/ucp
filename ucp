@@ -62,6 +62,10 @@ growl_provider() {
   `growlnotify -m "$1 has been uploaded" -t "ucp"`
 }
 
+notifo_provider() {
+  curl -k -u $NOTIFO_USER:$NOTIFO_API -d "msg=$1 has been uploaded&title=ucp&uri=$1" https://api.notifo.com/v1/send_notification 
+}
+
 file_to_url() {
   # $1 - File
   # $2 - New file name
