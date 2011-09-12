@@ -1,0 +1,97 @@
+#!/bin/bash
+
+CAPTURE_PROVIDER=screencapture_select
+
+screencapture_select_provider() {
+  screencapture -W $1
+}
+
+screencapture_provider() {
+  screencapture $1
+}
+
+## SFTP
+
+# Set some sane defaults for SFTP
+SFTP_USER=$(whoami)
+SFTP_DOMAIN=localhost
+SFTP_PORT=22
+SFTP_DIR=
+
+sftp_provider() {
+  scp -P $SFTP_PORT $1 $SFTP_USER@$SFTP_DOMAIN:$SFTP_DIR$2
+}
+
+pbcopy_provider() {
+  `echo "$1" | pbcopy`
+}
+
+file_to_url() {
+  # $1 - File
+  # $2 - New file name
+
+  if [ ! -z $UPLOAD_PROVIDER ] ; then
+    ${UPLOAD_PROVIDER}_provider $1 $2
+  fi
+
+  URL=$BASEURL$2
+
+  if [ ! -z $CLIPBOARD_PROVDER ] ; then
+    ${CLIPBOARD_PROVDER}_provider "$URL"
+  else
+    echo "$URL"
+  fi
+}
+
+[[ -r /etc/ucp ]] && source /etc/ucp
+[[ -r ~/.ucp ]] && source ~/.ucp
+
+case "$1" in
+  capture)
+    if [ -z $CAPTURE_PROVIDER ] ; then
+      echo "No capture provider set, please ensure you have a ~/.ucp file"
+      exit 1
+    fi
+
+    TMPFILE=`mktemp /tmp/XXXXX` || exit 1
+    ${CAPTURE_PROVIDER}_provider $TMPFILE
+
+    file_to_url $TMPFILE "$(basename $TMPFILE).png"
+
+    if [ ! -z $ARCHIVE_DIR ] ; then
+      mkdir -p $ARCHIVE_DIR
+      cp $TMPFILE "$ARCHIVE_DIR/$(basename $TMPFILE).png"
+    fi
+
+    rm $TMPFILE
+
+    ;;
+  upload)
+    if [ $2 = "-" ] ; then
+      TMPFILE=`mktemp /tmp/XXXXX` || exit 1
+
+      while read line ; do
+        echo "$line" >> $TMPFILE
+      done
+    else
+      TMPFILE=$2
+    fi
+
+    if [ -z $3 ] ; then
+      FILENAME=$(basename $TMPFILE)
+    else
+      FILENAME=$3
+    fi 
+
+    file_to_url "$TMPFILE" "$FILENAME"
+
+    if [ $2 = "-" ] ; then
+      rm $TMPFILE
+    fi
+    ;;
+  *)
+    echo "usage: $0 {capture|upload <file> [<as-filename>]}"
+    ;;
+esac
+
+exit 0
