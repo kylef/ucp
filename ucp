@@ -10,6 +10,14 @@ screencapture_provider() {
   screencapture $1
 }
 
+scrot_provider() {
+  scrot $1
+}
+
+scrot_select_provider() {
+  scrot -s $1
+}
+
 ## SFTP
 
 # Set some sane defaults for SFTP
