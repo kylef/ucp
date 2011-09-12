@@ -123,12 +123,15 @@ case "$1" in
 
     ;;
   upload)
-    if [ $2 = "-" ] ; then
+    if [ "$2" = "-" ] ; then
       TMPFILE=`mktemp /tmp/XXXXX` || exit 1
 
       while read line ; do
         echo "$line" >> $TMPFILE
       done
+    elif [ -z "$2" ] ; then
+      echo "usage: $0 $1 <file> [<as-filename>]"
+      exit 1
     else
       TMPFILE=$2
     fi
@@ -141,7 +144,7 @@ case "$1" in
 
     file_to_url "$TMPFILE" "$FILENAME"
 
-    if [ $2 = "-" ] ; then
+    if [ "$2" = "-" ] ; then
       rm $TMPFILE
     fi
     ;;
