@@ -38,6 +38,10 @@ isgd_provider() {
   URL=$(curl "http://is.gd/api.php?longurl=$1")
 }
 
+bitly_provider() {
+  URL=$(curl "http://api.bit.ly/v3/shorten?login=$BITLY_USER&apiKey=$BITLY_API&format=txt&longUrl=$1")
+}
+
 pbcopy_provider() {
   `echo "$1" | pbcopy`
 }
