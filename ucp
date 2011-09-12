@@ -30,6 +30,10 @@ sftp_provider() {
   scp -P $SFTP_PORT $1 $SFTP_USER@$SFTP_DOMAIN:$SFTP_DIR$2
 }
 
+ftp_provider() {
+  curl -T $1 -u $FTP_USER:$FTP_PASSWORD ftp://$FTP_HOST/$2
+}
+
 pbcopy_provider() {
   `echo "$1" | pbcopy`
 }
